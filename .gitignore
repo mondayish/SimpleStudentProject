@@ -1,0 +1,9 @@
+# main
+.idea
+*.iml
+
+# frontend
+*/node_modules
+
+# backend
+*/target
