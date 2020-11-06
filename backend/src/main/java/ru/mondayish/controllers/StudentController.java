@@ -38,10 +38,9 @@ public class StudentController {
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
-        student.setId(id);
-        if (studentRepository.existsById(id)) {
+    @PutMapping("/")
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student) {
+        if (studentRepository.existsById(student.getId())) {
             Student updatedStudent = studentRepository.save(student);
             return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
         }
