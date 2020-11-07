@@ -1,6 +1,9 @@
 import {Component, TemplateRef, ViewChild} from "@angular/core";
 import {StudentService} from "../services/student.service";
 import {Student} from "../models/student";
+import {MatDialog} from "@angular/material/dialog";
+import {AddStudentDialogComponent} from "./add-student-dialog,component";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
     selector: "student-app",
@@ -14,12 +17,29 @@ export class AppComponent {
 
     // editedStudent: Student;
     students: Student[];
+    dataSource: MatTableDataSource<Student>;
     displayedColumns: string[] = ["id", "firstName", "lastName", "age", "edit", "delete"];
     // isNewRecord: boolean;
     // statusMessage: string;
 
-    constructor(private studentService: StudentService) {
-        this.students = new Array<Student>();
+    constructor(private studentService: StudentService, public addDialog: MatDialog) {
+        this.students = [];
+    }
+
+    openAddDialog(): void {
+        const dialogRef = this.addDialog.open(AddStudentDialogComponent, {
+            width: '250px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result) {
+                this.studentService.createStudent(result).subscribe((newStudent: Student) => {
+                    this.students.push(newStudent);
+                    this.dataSource = new MatTableDataSource<Student>(this.students);
+                });
+            }
+        })
     }
 
     ngOnInit(): void {
@@ -29,13 +49,20 @@ export class AppComponent {
     private loadStudents(): void {
         this.studentService.getAllStudents().subscribe((data: Student[]) => {
             this.students = data;
+            this.initializeDataSource();
         });
+    }
+
+    private initializeDataSource() : void{
+        this.dataSource = new MatTableDataSource<Student>(this.students);
     }
 
     deleteStudent(student: Student): void {
         this.studentService.deleteStudent(student.id).subscribe(data => {
-            console.log(data);
-            this.loadStudents();
+            this.students.forEach((item, index) => {
+                if (item === student) this.students.splice(index, 1);
+                this.initializeDataSource();
+            });
         });
     }
 
