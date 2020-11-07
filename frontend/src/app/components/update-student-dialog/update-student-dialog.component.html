@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Update student</h1>
+<div mat-dialog-content>
+    <p>Update first name</p>
+    <mat-form-field>
+        <mat-label>First name</mat-label>
+        <input matInput [(ngModel)]="student.firstName">
+    </mat-form-field>
+
+    <p>Update last name</p>
+    <mat-form-field>
+        <mat-label>Last name</mat-label>
+        <input matInput [(ngModel)]="student.lastName">
+    </mat-form-field>
+
+    <p>Update age</p>
+    <mat-form-field>
+        <mat-label>Age</mat-label>
+        <input matInput [(ngModel)]="student.age">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()">Cancel</button>
+    <button mat-button (click)="onEditClick()">Edit</button>
+</div>

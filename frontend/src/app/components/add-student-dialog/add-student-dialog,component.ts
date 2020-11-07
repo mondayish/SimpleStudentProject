@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {MatDialogRef} from "@angular/material/dialog";
-import {Student} from "../models/student";
+import {Student} from "../../models/student";
 
 @Component({
     selector: "add-student-dialog",
