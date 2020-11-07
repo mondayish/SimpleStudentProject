@@ -14,7 +14,7 @@ export class AppComponent {
 
     // editedStudent: Student;
     students: Student[];
-    displayedColumns: string[] = ["id", "firstName", "lastName", "age"];
+    displayedColumns: string[] = ["id", "firstName", "lastName", "age", "edit", "delete"];
     // isNewRecord: boolean;
     // statusMessage: string;
 
@@ -29,6 +29,13 @@ export class AppComponent {
     private loadStudents(): void {
         this.studentService.getAllStudents().subscribe((data: Student[]) => {
             this.students = data;
+        });
+    }
+
+    deleteStudent(student: Student): void {
+        this.studentService.deleteStudent(student.id).subscribe(data => {
+            console.log(data);
+            this.loadStudents();
         });
     }
 

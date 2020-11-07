@@ -4,14 +4,14 @@
   "description": "Simple student angular app",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open --proxy-config proxy.conf.json",
+    "start": "ng serve --open",
     "build": "ng build"
   },
   "author": "mondayish",
   "license": "ISC",
   "dependencies": {
-    "@angular/animations": "^10.2.2",
-    "@angular/cdk": "^10.2.7",
+    "@angular/animations": "~10.2.2",
+    "@angular/cdk": "~10.2.7",
     "@angular/common": "~10.0.0",
     "@angular/compiler": "~10.0.0",
     "@angular/core": "~10.0.0",
@@ -20,7 +20,8 @@
     "@angular/platform-browser": "~10.0.0",
     "@angular/platform-browser-dynamic": "~10.0.0",
     "@angular/router": "~10.0.0",
-    "chokidar": "^3.4.3",
+    "bootstrap": "~3.3.7",
+    "chokidar": "~3.4.3",
     "rxjs": "~6.5.5",
     "zone.js": "~0.10.3"
   },

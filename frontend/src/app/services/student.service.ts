@@ -5,7 +5,7 @@ import {Student} from "../models/student";
 
 @Injectable()
 export class StudentService {
-    private URL: string = "http://localhost:4200/api/students/";
+    private URL: string = "http://localhost:8080/api/students/";
     private JSON_HEADERS = new HttpHeaders().set("Content-Type", "application/json");
 
     constructor(private httpClient: HttpClient) {
