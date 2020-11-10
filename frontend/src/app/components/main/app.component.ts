@@ -81,5 +81,6 @@ export class AppComponent implements OnInit {
         this.dataSource = new MatTableDataSource<Student>(this.students);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = (item, property) => item[property];
     }
 }
