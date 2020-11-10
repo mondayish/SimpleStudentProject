@@ -30,6 +30,8 @@ export class AppComponent implements OnInit {
     }
 
     // todo understand how it works
+    // todo make left nav with professors and students pages
+    // todo see more components
 
     addStudent(): void {
         const dialogRef = this.addDialog.open(AddStudentDialogComponent, {
