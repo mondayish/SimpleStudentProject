@@ -1,6 +1,6 @@
 import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Student} from "../../models/student";
+import {Student} from "../../models/Student";
 
 @Component({
     selector: "update-student-dialog",

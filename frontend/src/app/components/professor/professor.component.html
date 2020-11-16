@@ -1,0 +1,48 @@
+<div style="width: 80%; margin: 1% auto" class="mat-elevation-z8 p-2">
+    <h1 class="text-center">Professor list</h1>
+    <table mat-table [dataSource]="dataSource" style="width: 100%" class="table-striped" matSort>
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+            <td mat-cell *matCellDef="let professor"> {{professor.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let professor"> {{professor.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="age">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Age</th>
+            <td mat-cell *matCellDef="let professor"> {{professor.age}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="subject">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Subject</th>
+            <td mat-cell *matCellDef="let professor"> {{professor.subject}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let professor">
+                <button mat-raised-button color="primary" (click)="updateProfessor(professor)">Edit</button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let professor">
+                <button mat-raised-button color="warn" (click)="deleteProfessor(professor)">Delete</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <div class="text-center m-4">
+        <button mat-raised-button class="btn-success" (click)="addProfessor()">Add new professor</button>
+    </div>
+</div>

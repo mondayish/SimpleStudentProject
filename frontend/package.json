@@ -4,7 +4,7 @@
   "description": "Simple student angular app",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open",
+    "start": "ng serve",
     "build": "ng build"
   },
   "author": "mondayish",
