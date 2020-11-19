@@ -3,6 +3,7 @@ package ru.mondayish.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,5 +18,6 @@ public class Professor {
 
     private int age;
 
-    private String subject;
+    @ManyToMany(mappedBy = "professors")
+    private List<Subject> subjects;
 }

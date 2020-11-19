@@ -29,9 +29,6 @@ export class StudentComponent implements OnInit {
         this.loadStudents();
     }
 
-    // todo understand how it works
-    // todo see more components
-
     addStudent(): void {
         const dialogRef = this.addDialog.open(AddStudentDialogComponent, {
             width: '300px'
