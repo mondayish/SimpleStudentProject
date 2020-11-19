@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mondayish.models.MarksStorage;
 import ru.mondayish.models.Student;
-import ru.mondayish.models.Subject;
 import ru.mondayish.repositories.StudentRepository;
 import ru.mondayish.repositories.SubjectRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService implements EducationService<Student> {
@@ -26,8 +24,8 @@ public class StudentService implements EducationService<Student> {
 
     @Override
     public Student create(Student student) {
-        student
-                .getMarksStorages()
+        // handle every new subject
+        student.getMarksStorages()
                 .stream()
                 .map(MarksStorage::getSubject)
                 .filter(subject -> subject.getId() == 0)

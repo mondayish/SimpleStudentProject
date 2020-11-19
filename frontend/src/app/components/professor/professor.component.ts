@@ -45,7 +45,7 @@ export class ProfessorComponent implements OnInit {
     updateProfessor(professor: Professor): void {
         const dialogRef = this.updateDialog.open(UpdateProfessorDialogComponent, {
             width: '300px',
-            data: new Professor(professor.id, professor.name, professor.age, professor.subject)
+            data: new Professor(professor.id, professor.name, professor.age, professor.subjects)
         });
 
         dialogRef.afterClosed().subscribe(result => {

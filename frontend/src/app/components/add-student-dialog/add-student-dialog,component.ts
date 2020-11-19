@@ -12,7 +12,7 @@ export class AddStudentDialogComponent {
     student: Student;
 
     constructor(public dialogRef: MatDialogRef<AddStudentDialogComponent>) {
-        this.student = new Student(0, "", "", 0);
+        this.student = new Student(0, "", "", 0, null);
     }
 
     onCancelClick(): void {

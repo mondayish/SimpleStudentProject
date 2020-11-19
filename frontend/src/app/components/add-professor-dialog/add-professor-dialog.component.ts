@@ -11,7 +11,7 @@ export class AddProfessorDialogComponent {
     professor: Professor;
 
     constructor(public dialogRef: MatDialogRef<AddProfessorDialogComponent>) {
-        this.professor = new Professor(0, "", 0, "");
+        this.professor = new Professor(0, "", 0, null);
     }
 
     onCancelClick(): void {

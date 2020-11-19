@@ -47,7 +47,7 @@ export class StudentComponent implements OnInit {
     updateStudent(student: Student): void {
         const dialogRef = this.updateDialog.open(UpdateStudentDialogComponent, {
             width: '300px',
-            data: new Student(student.id, student.firstName, student.lastName, student.age)
+            data: new Student(student.id, student.firstName, student.lastName, student.age, null)
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -70,6 +70,8 @@ export class StudentComponent implements OnInit {
 
     private loadStudents(): void {
         this.studentService.getAllStudents().subscribe((data: Student[]) => {
+            console.log(data);
+            console.log(new Date().toISOString());
             this.students = data;
             this.initializeDataSource();
         });
