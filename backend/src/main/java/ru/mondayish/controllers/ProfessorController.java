@@ -21,7 +21,7 @@ public class ProfessorController {
         this.professorService = professorService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Professor> getAllProfessors() {
         return professorService.getAll();
     }

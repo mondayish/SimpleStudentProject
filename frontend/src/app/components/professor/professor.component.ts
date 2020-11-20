@@ -17,7 +17,7 @@ export class ProfessorComponent implements OnInit {
     @ViewChild(MatSort, {static: false}) sort: MatSort;
     professors: Professor[];
     dataSource: MatTableDataSource<Professor>;
-    displayedColumns: string[] = ["id", "name", "age", "subject", "edit", "delete"];
+    displayedColumns: string[] = ["id", "name", "age", "edit", "delete"];
 
     constructor(private professorService: ProfessorService, public addDialog: MatDialog, public updateDialog: MatDialog) {
         this.professors = [];
@@ -36,7 +36,7 @@ export class ProfessorComponent implements OnInit {
             if (result) {
                 this.professorService.createProfessor(result).subscribe((newProfessor: Professor) => {
                     this.professors.push(newProfessor);
-                    this.initializeDataSource();
+                    this.refreshDataSource();
                 });
             }
         });
@@ -45,7 +45,7 @@ export class ProfessorComponent implements OnInit {
     updateProfessor(professor: Professor): void {
         const dialogRef = this.updateDialog.open(UpdateProfessorDialogComponent, {
             width: '300px',
-            data: new Professor(professor.id, professor.name, professor.age, professor.subjects)
+            data: new Professor(professor.id, professor.name, professor.age, [])
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -53,7 +53,7 @@ export class ProfessorComponent implements OnInit {
                 this.professorService.updateProfessor(result).subscribe((updatedProfessor: Professor) => {
                     this.professors = this.professors.filter((item) => item !== professor);
                     this.professors.push(updatedProfessor);
-                    this.initializeDataSource();
+                    this.refreshDataSource();
                 });
             }
         });
@@ -62,7 +62,7 @@ export class ProfessorComponent implements OnInit {
     deleteProfessor(professor: Professor): void {
         this.professorService.deleteProfessor(professor.id).subscribe(data => {
             this.professors = this.professors.filter((item) => item !== professor);
-            this.initializeDataSource();
+            this.refreshDataSource();
         });
     }
 
@@ -71,6 +71,10 @@ export class ProfessorComponent implements OnInit {
             this.professors = data;
             this.initializeDataSource();
         });
+    }
+
+    private refreshDataSource(): void{
+        this.dataSource.data = this.professors;
     }
 
     private initializeDataSource(): void {

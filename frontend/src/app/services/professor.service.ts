@@ -12,7 +12,7 @@ export class ProfessorService {
     }
 
     getAllProfessors(): Observable<any> {
-        return this.httpClient.get(this.URL + "all");
+        return this.httpClient.get(this.URL);
     }
 
     createProfessor(professor: Professor): Observable<any> {

@@ -25,6 +25,10 @@ export class StudentComponent implements OnInit {
         this.students = [];
     }
 
+    // todo pagination on backend
+    // todo maybe some styles
+    // todo validation
+
     ngOnInit(): void {
         this.loadStudents();
     }
@@ -38,7 +42,7 @@ export class StudentComponent implements OnInit {
             if (result) {
                 this.studentService.createStudent(result).subscribe((newStudent: Student) => {
                     this.students.push(newStudent);
-                    this.initializeDataSource();
+                    this.refreshDataSource();
                 });
             }
         });
@@ -47,7 +51,7 @@ export class StudentComponent implements OnInit {
     updateStudent(student: Student): void {
         const dialogRef = this.updateDialog.open(UpdateStudentDialogComponent, {
             width: '300px',
-            data: new Student(student.id, student.firstName, student.lastName, student.age, null)
+            data: new Student(student.id, student.firstName, student.lastName, student.age, [])
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -55,7 +59,7 @@ export class StudentComponent implements OnInit {
                 this.studentService.updateStudent(result).subscribe((updatedStudent: Student) => {
                     this.students = this.students.filter((item) => item !== student);
                     this.students.push(updatedStudent);
-                    this.initializeDataSource();
+                    this.refreshDataSource();
                 });
             }
         });
@@ -64,17 +68,20 @@ export class StudentComponent implements OnInit {
     deleteStudent(student: Student): void {
         this.studentService.deleteStudent(student.id).subscribe(data => {
             this.students = this.students.filter((item) => item !== student);
-            this.initializeDataSource();
+            this.refreshDataSource();
         });
     }
 
     private loadStudents(): void {
         this.studentService.getAllStudents().subscribe((data: Student[]) => {
-            console.log(data);
-            console.log(new Date().toISOString());
             this.students = data;
             this.initializeDataSource();
         });
+    }
+
+    // the best way that I found
+    private refreshDataSource(): void{
+        this.dataSource.data = this.students;
     }
 
     private initializeDataSource(): void {
