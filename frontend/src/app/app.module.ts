@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {StudentComponent} from "./components/student/student.component";
 import {MatTableModule} from "@angular/material/table";
@@ -31,7 +31,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forRoot(appRoutes), BrowserModule, BrowserAnimationsModule, FormsModule, HttpClientModule, MatTableModule, MatSidenavModule,
-        MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule, MatToolbarModule, MatIconModule, MatListModule],
+        MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule, MatToolbarModule, MatIconModule, MatListModule, ReactiveFormsModule],
     declarations: [StudentComponent, AddStudentDialogComponent, UpdateStudentDialogComponent, AppComponent, ProfessorComponent, AddProfessorDialogComponent, UpdateProfessorDialogComponent],
     bootstrap: [AppComponent],
     entryComponents: [AddStudentDialogComponent, UpdateStudentDialogComponent]
