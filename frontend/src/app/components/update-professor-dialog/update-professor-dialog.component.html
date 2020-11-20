@@ -1,18 +1,28 @@
 <h1 mat-dialog-title>Update professor</h1>
 <div mat-dialog-content>
-    <p>Update name</p>
-    <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="professor.name">
-    </mat-form-field>
+    <form [formGroup]="professorForm">
+        <p>Update name</p>
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" name="name" [(ngModel)]="professor.name">
+        </mat-form-field>
+        <div class="p-message-error text-danger text-sm-left mb-3" *ngIf="fieldErrors('name')">
+            <span *ngIf="fieldErrors('name').required">Name is required</span>
+            <span *ngIf="fieldErrors('name').minlength || fieldErrors('name').maxlength">Length of name must be between 3 and 20 chars</span>
+        </div>
 
-    <p>Update age</p>
-    <mat-form-field>
-        <mat-label>Age</mat-label>
-        <input matInput [(ngModel)]="professor.age">
-    </mat-form-field>
+        <p>Update age</p>
+        <mat-form-field>
+            <mat-label>Age</mat-label>
+            <input matInput formControlName="age" name="age" [(ngModel)]="professor.age">
+        </mat-form-field>
+        <div class="p-message-error text-danger text-sm-left mb-3" *ngIf="fieldErrors('age')">
+            <span *ngIf="fieldErrors('age').required">Age is required</span>
+            <span *ngIf="fieldErrors('age').min || fieldErrors('age').max">Age must be in [18..100]</span>
+        </div>
+    </form>
 </div>
 <div mat-dialog-actions>
     <button mat-button class="btn-danger" (click)="onCancelClick()">Cancel</button>
-    <button mat-button class="btn-success" (click)="onEditClick()">Edit</button>
+    <button mat-button class="btn-success" [disabled]="hasFormErrors()" (click)="onEditClick()">Edit</button>
 </div>

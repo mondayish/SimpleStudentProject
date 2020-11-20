@@ -1,24 +1,38 @@
 <h1 mat-dialog-title>Update student</h1>
 <div mat-dialog-content>
-    <p>Update first name</p>
-    <mat-form-field>
-        <mat-label>First name</mat-label>
-        <input matInput [(ngModel)]="student.firstName">
-    </mat-form-field>
+    <form [formGroup]="studentForm">
+        <p>Update first name</p>
+        <mat-form-field>
+            <mat-label>First name</mat-label>
+            <input matInput formControlName="firstName" name="firstName" [(ngModel)]="student.firstName">
+        </mat-form-field>
+        <div class="p-message-error text-danger text-sm-left mb-3" *ngIf="fieldErrors('firstName')">
+            <span *ngIf="fieldErrors('firstName').required">First name is required</span>
+            <span *ngIf="fieldErrors('firstName').minlength || fieldErrors('firstName').maxlength">Length of first name must be between 3 and 20 chars</span>
+        </div>
 
-    <p>Update last name</p>
-    <mat-form-field>
-        <mat-label>Last name</mat-label>
-        <input matInput [(ngModel)]="student.lastName">
-    </mat-form-field>
+        <p>Update last name</p>
+        <mat-form-field>
+            <mat-label>Last name</mat-label>
+            <input matInput formControlName="lastName" name="lastName" [(ngModel)]="student.lastName">
+        </mat-form-field>
+        <div class="p-message-error text-danger text-sm-left mb-3" *ngIf="fieldErrors('lastName')">
+            <span *ngIf="fieldErrors('lastName').required">Last name is required</span>
+            <span *ngIf="fieldErrors('lastName').minlength || fieldErrors('lastName').maxlength">Length of last name must be between 3 and 20 chars</span>
+        </div>
 
-    <p>Update age</p>
-    <mat-form-field>
-        <mat-label>Age</mat-label>
-        <input matInput [(ngModel)]="student.age">
-    </mat-form-field>
+        <p>Update age</p>
+        <mat-form-field>
+            <mat-label>Age</mat-label>
+            <input matInput formControlName="age" name="age" [(ngModel)]="student.age">
+        </mat-form-field>
+        <div class="p-message-error text-danger text-sm-left mb-3" *ngIf="fieldErrors('age')">
+            <span *ngIf="fieldErrors('age').required">Age is required</span>
+            <span *ngIf="fieldErrors('age').min || fieldErrors('age').max">Age must be in [18..100]</span>
+        </div>
+    </form>
 </div>
 <div mat-dialog-actions>
     <button mat-button class="btn-danger" (click)="onCancelClick()">Cancel</button>
-    <button mat-button class="btn-success" (click)="onEditClick()">Edit</button>
+    <button mat-button class="btn-success" (click)="onEditClick()" [disabled]="hasFormErrors()">Edit</button>
 </div>

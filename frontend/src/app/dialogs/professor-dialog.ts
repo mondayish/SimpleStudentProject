@@ -1,6 +1,8 @@
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {OnInit} from "@angular/core";
+import {Directive, OnInit} from "@angular/core";
 import {Professor} from "../models/Professor";
+
+@Directive()
 
 export abstract class ProfessorDialog implements OnInit {
 
