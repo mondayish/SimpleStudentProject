@@ -1,6 +1,7 @@
 package ru.mondayish.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mondayish.models.Professor;
 import ru.mondayish.repositories.ProfessorRepository;
@@ -31,6 +32,11 @@ public class ProfessorService implements EducationService<Professor> {
     @Override
     public List<Professor> getAll() {
         return professorRepository.findAll();
+    }
+
+    @Override
+    public List<Professor> getAll(Pageable pageable) {
+        return professorRepository.findAll(pageable).toList();
     }
 
     @Override

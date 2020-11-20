@@ -1,6 +1,7 @@
 package ru.mondayish.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mondayish.models.Subject;
 import ru.mondayish.repositories.SubjectRepository;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SubjectService implements EducationService<Subject>{
+public class SubjectService implements EducationService<Subject> {
 
     private final SubjectRepository subjectRepository;
 
@@ -34,8 +35,13 @@ public class SubjectService implements EducationService<Subject>{
     }
 
     @Override
+    public List<Subject> getAll(Pageable pageable) {
+        return subjectRepository.findAll(pageable).toList();
+    }
+
+    @Override
     public boolean update(Subject subject) {
-        if(subjectRepository.existsById(subject.getId())){
+        if (subjectRepository.existsById(subject.getId())) {
             subjectRepository.save(subject);
             return true;
         }

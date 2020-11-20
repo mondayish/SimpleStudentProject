@@ -26,7 +26,6 @@ export class StudentComponent implements OnInit {
     }
 
     // todo pagination on backend
-    // todo maybe some styles
     // todo validation
 
     ngOnInit(): void {
