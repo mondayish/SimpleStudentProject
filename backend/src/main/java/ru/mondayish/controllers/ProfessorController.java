@@ -1,13 +1,14 @@
 package ru.mondayish.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mondayish.models.Professor;
 import ru.mondayish.services.EducationService;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,14 +17,13 @@ public class ProfessorController {
 
     private final EducationService<Professor> professorService;
 
-    @Autowired
     public ProfessorController(EducationService<Professor> professorService) {
         this.professorService = professorService;
     }
 
     @GetMapping
-    public List<Professor> getAllProfessors() {
-        return professorService.getAll();
+    public Page<Professor> getAllProfessors(@PageableDefault(page = 0, size = 5) Pageable pageable) {
+        return professorService.getAll(pageable);
     }
 
     @GetMapping("{id}")

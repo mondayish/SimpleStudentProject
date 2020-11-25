@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
@@ -7,6 +7,7 @@ import {Professor} from "../../models/Professor";
 import {ProfessorService} from "../../services/professor.service";
 import {AddProfessorDialogComponent} from "../add-professor-dialog/add-professor-dialog.component";
 import {UpdateProfessorDialogComponent} from "../update-professor-dialog/update-professor-dialog.component";
+import {PageableParams} from "../../models/PageableParams";
 
 @Component({
     selector: 'professor-app',
@@ -15,6 +16,7 @@ import {UpdateProfessorDialogComponent} from "../update-professor-dialog/update-
 export class ProfessorComponent implements OnInit {
     @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: false}) sort: MatSort;
+    totalProfessors: number = 0;
     professors: Professor[];
     dataSource: MatTableDataSource<Professor>;
     displayedColumns: string[] = ["id", "name", "age", "edit", "delete"];
@@ -24,7 +26,7 @@ export class ProfessorComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadProfessors();
+        this.loadProfessors({page: 0, size: 5});
     }
 
     addProfessor(): void {
@@ -35,8 +37,7 @@ export class ProfessorComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.professorService.createProfessor(result).subscribe((newProfessor: Professor) => {
-                    this.professors.push(newProfessor);
-                    this.refreshDataSource();
+                    this.refreshCurrentPage();
                 });
             }
         });
@@ -51,9 +52,7 @@ export class ProfessorComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.professorService.updateProfessor(result).subscribe((updatedProfessor: Professor) => {
-                    this.professors = this.professors.filter((item) => item !== professor);
-                    this.professors.push(updatedProfessor);
-                    this.refreshDataSource();
+                    this.refreshCurrentPage();
                 });
             }
         });
@@ -61,25 +60,29 @@ export class ProfessorComponent implements OnInit {
 
     deleteProfessor(professor: Professor): void {
         this.professorService.deleteProfessor(professor.id).subscribe(data => {
-            this.professors = this.professors.filter((item) => item !== professor);
-            this.refreshDataSource();
+            this.refreshCurrentPage();
         });
     }
 
-    private loadProfessors(): void {
-        this.professorService.getAllProfessors().subscribe((data: Professor[]) => {
-            this.professors = data;
+    nextPage(event: PageEvent | { pageSize: number, pageIndex: number }) {
+        this.loadProfessors({page: event.pageIndex, size: event.pageSize});
+    }
+
+    private loadProfessors(params: PageableParams): void {
+        this.professorService.getAllProfessors(params).subscribe(data => {
+            this.professors = data['content'];
+            this.totalProfessors = data['totalElements'];
             this.initializeDataSource();
         });
     }
 
-    private refreshDataSource(): void{
-        this.dataSource.data = this.professors;
+    // refresh the current page of table for accepting CRUD operations
+    private refreshCurrentPage() {
+        this.nextPage({pageIndex: this.paginator.pageIndex, pageSize: this.paginator.pageSize});
     }
 
     private initializeDataSource(): void {
         this.dataSource = new MatTableDataSource<Professor>(this.professors);
-        this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = (item, property) => item[property];
     }

@@ -1,6 +1,7 @@
 package ru.mondayish.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mondayish.models.Subject;
@@ -14,7 +15,6 @@ public class SubjectService implements EducationService<Subject> {
 
     private final SubjectRepository subjectRepository;
 
-    @Autowired
     public SubjectService(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
     }
@@ -35,8 +35,8 @@ public class SubjectService implements EducationService<Subject> {
     }
 
     @Override
-    public List<Subject> getAll(Pageable pageable) {
-        return subjectRepository.findAll(pageable).toList();
+    public Page<Subject> getAll(Pageable pageable) {
+        return subjectRepository.findAll(pageable);
     }
 
     @Override

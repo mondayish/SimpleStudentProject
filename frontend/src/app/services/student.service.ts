@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Student} from "../models/Student";
+import {PageableParams} from "../models/PageableParams";
 
 @Injectable()
 export class StudentService {
@@ -11,8 +12,9 @@ export class StudentService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getAllStudents(): Observable<any> {
-        return this.httpClient.get(this.URL);
+    getAllStudents(params: PageableParams): Observable<any> {
+        const requestParams: string = `?page=${params.page}&size=${params.size}`;
+        return this.httpClient.get(this.URL+requestParams);
     }
 
     createStudent(student: Student): Observable<any> {

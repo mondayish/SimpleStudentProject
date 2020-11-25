@@ -5,8 +5,9 @@ import {MatDialog} from "@angular/material/dialog";
 import {AddStudentDialogComponent} from "../add-student-dialog/add-student-dialog,component";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {UpdateStudentDialogComponent} from "../update-student-dialog/update-student-dialog.component";
+import {PageableParams} from "../../models/PageableParams";
 
 @Component({
     selector: "student-app",
@@ -17,19 +18,17 @@ import {UpdateStudentDialogComponent} from "../update-student-dialog/update-stud
 export class StudentComponent implements OnInit {
     @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: false}) sort: MatSort;
+    totalStudents: number = 0;
     students: Student[];
-    dataSource: MatTableDataSource<Student>;
+    dataSource: MatTableDataSource<Student>
     displayedColumns: string[] = ["id", "firstName", "lastName", "age", "edit", "delete"];
 
     constructor(private studentService: StudentService, public addDialog: MatDialog, public updateDialog: MatDialog) {
         this.students = [];
     }
 
-    // todo pagination on backend
-    // todo validation
-
     ngOnInit(): void {
-        this.loadStudents();
+        this.loadStudents({page: 0, size: 5});
     }
 
     addStudent(): void {
@@ -40,8 +39,7 @@ export class StudentComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.studentService.createStudent(result).subscribe((newStudent: Student) => {
-                    this.students.push(newStudent);
-                    this.refreshDataSource();
+                    this.refreshCurrentPage();
                 });
             }
         });
@@ -56,9 +54,7 @@ export class StudentComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.studentService.updateStudent(result).subscribe((updatedStudent: Student) => {
-                    this.students = this.students.filter((item) => item !== student);
-                    this.students.push(updatedStudent);
-                    this.refreshDataSource();
+                    this.refreshCurrentPage();
                 });
             }
         });
@@ -66,26 +62,29 @@ export class StudentComponent implements OnInit {
 
     deleteStudent(student: Student): void {
         this.studentService.deleteStudent(student.id).subscribe(data => {
-            this.students = this.students.filter((item) => item !== student);
-            this.refreshDataSource();
+            this.refreshCurrentPage();
         });
     }
 
-    private loadStudents(): void {
-        this.studentService.getAllStudents().subscribe((data: Student[]) => {
-            this.students = data;
+    nextPage(event: PageEvent | { pageSize: number, pageIndex: number }) {
+        this.loadStudents({page: event.pageIndex, size: event.pageSize});
+    }
+
+    private loadStudents(params: PageableParams): void {
+        this.studentService.getAllStudents(params).subscribe(data => {
+            this.students = data['content'];
+            this.totalStudents = data['totalElements'];
             this.initializeDataSource();
         });
     }
 
-    // the best way that I found
-    private refreshDataSource(): void{
-        this.dataSource.data = this.students;
+    // refresh the current page of table for accepting CRUD operations
+    private refreshCurrentPage() {
+        this.nextPage({pageIndex: this.paginator.pageIndex, pageSize: this.paginator.pageSize});
     }
 
     private initializeDataSource(): void {
         this.dataSource = new MatTableDataSource<Student>(this.students);
-        this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = (item, property) => item[property];
     }

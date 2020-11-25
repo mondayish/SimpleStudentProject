@@ -1,6 +1,7 @@
 package ru.mondayish.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mondayish.models.Mark;
@@ -14,7 +15,6 @@ public class MarkService implements EducationService<Mark> {
 
     private final MarkRepository markRepository;
 
-    @Autowired
     public MarkService(MarkRepository markRepository) {
         this.markRepository = markRepository;
     }
@@ -25,8 +25,8 @@ public class MarkService implements EducationService<Mark> {
     }
 
     @Override
-    public List<Mark> getAll(Pageable pageable) {
-        return markRepository.findAll(pageable).toList();
+    public Page<Mark> getAll(Pageable pageable) {
+        return markRepository.findAll(pageable);
     }
 
     @Override

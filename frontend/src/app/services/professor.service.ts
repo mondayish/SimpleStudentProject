@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Professor} from "../models/Professor";
+import {PageableParams} from "../models/PageableParams";
 
 @Injectable({providedIn: 'root'})
 export class ProfessorService {
@@ -11,8 +12,9 @@ export class ProfessorService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getAllProfessors(): Observable<any> {
-        return this.httpClient.get(this.URL);
+    getAllProfessors(params: PageableParams): Observable<any> {
+        const requestParams: string = `?page=${params.page}&size=${params.size}`;
+        return this.httpClient.get(this.URL + requestParams);
     }
 
     createProfessor(professor: Professor): Observable<any> {

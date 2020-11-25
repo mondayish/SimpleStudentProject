@@ -1,5 +1,6 @@
 package ru.mondayish.services;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface EducationService<T>{
 
     List<T> getAll();
 
-    List<T> getAll(Pageable pageable);
+    Page<T> getAll(Pageable pageable);
 
     boolean update(T t);
 

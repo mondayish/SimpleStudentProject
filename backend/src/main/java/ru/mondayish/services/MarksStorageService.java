@@ -1,6 +1,7 @@
 package ru.mondayish.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mondayish.models.MarksStorage;
@@ -14,7 +15,6 @@ public class MarksStorageService implements EducationService<MarksStorage> {
 
     private final MarksStorageRepository marksStorageRepository;
 
-    @Autowired
     public MarksStorageService(MarksStorageRepository marksStorageRepository) {
         this.marksStorageRepository = marksStorageRepository;
     }
@@ -35,8 +35,8 @@ public class MarksStorageService implements EducationService<MarksStorage> {
     }
 
     @Override
-    public List<MarksStorage> getAll(Pageable pageable) {
-        return marksStorageRepository.findAll(pageable).toList();
+    public Page<MarksStorage> getAll(Pageable pageable) {
+        return marksStorageRepository.findAll(pageable);
     }
 
     @Override
