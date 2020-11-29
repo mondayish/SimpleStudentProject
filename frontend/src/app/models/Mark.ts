@@ -4,7 +4,7 @@ export class Mark {
         public id: number,
         public point: number,
         // date.toISOString format
-        public date: string
+        public date: Date
     ) {
     }
 }

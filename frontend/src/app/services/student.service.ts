@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Student} from "../models/Student";
 import {PageableParams} from "../models/PageableParams";
@@ -22,7 +22,7 @@ export class StudentService {
     }
 
     updateStudent(student: Student): Observable<any> {
-        return this.httpClient.put(this.URL, JSON.stringify(student), {headers: this.JSON_HEADERS});
+        return this.httpClient.put(this.URL, student, {headers: this.JSON_HEADERS});
     }
 
     deleteStudent(id: number): Observable<any> {

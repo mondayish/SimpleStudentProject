@@ -1,0 +1,69 @@
+<div class="container text-center bg-light rounded">
+    <div *ngIf="student.marksStorages.length>0" class="row m-3">
+
+        <div class="col my-auto">
+            <div>Select subject</div>
+            <mat-form-field appearance="fill">
+                <mat-label>Subject</mat-label>
+                <mat-select [(value)]="selectedMarksStorage">
+                    <mat-option [value]="marksStorage" *ngFor="let marksStorage of student.marksStorages">
+                        {{marksStorage.subject.name}} - {{marksStorage.subject.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <button mat-raised-button class="btn-info" (click)="">Add subject</button>
+            </div>
+        </div>
+
+        <div class="col my-auto">
+            <div>Select date</div>
+            <mat-form-field appearance="fill">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" [max]="maxDate"
+                       [(ngModel)]="markToAdd.date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <div>Select mark</div>
+            <mat-form-field appearance="fill">
+                <mat-label>Mark</mat-label>
+                <mat-select [(value)]="markToAdd.point">
+                    <mat-option *ngFor="let point of markPoints" [value]="point">
+                        {{point}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div>
+                <button mat-raised-button color="primary" (click)="onAddMarkClick()">Add mark</button>
+            </div>
+        </div>
+
+        <div class="col">
+            <table mat-table [dataSource]="selectedMarksStorage.marks" class="table">
+
+                <ng-container matColumnDef="point">
+                    <th mat-header-cell *matHeaderCellDef>Point</th>
+                    <td mat-cell *matCellDef="let mark">{{mark.point}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef>Date</th>
+                    <td mat-cell *matCellDef="let mark">{{getBeautifulDate(mark.date)}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedMarkColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedMarkColumns;"
+                    class="text-left"></tr>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="text-center m-2">
+        <div class="text-success m-2" *ngIf="saveState==='success'" >Changes were successfully saved</div>
+        <div class="text-danger m-2" *ngIf="saveState==='error'">Ooops, error while save</div>
+        <button mat-raised-button class="btn-success" (click)="onSaveChangesClick()">Save changes</button>
+    </div>
+</div>

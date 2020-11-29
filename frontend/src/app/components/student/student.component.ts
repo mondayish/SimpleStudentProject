@@ -8,20 +8,32 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {UpdateStudentDialogComponent} from "../update-student-dialog/update-student-dialog.component";
 import {PageableParams} from "../../models/PageableParams";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
     selector: "student-app",
     templateUrl: './student.component.html',
-    providers: [StudentService]
+    providers: [StudentService],
+    styleUrls: ['./student.component.css'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+        ])
+    ]
 })
 
 export class StudentComponent implements OnInit {
+
     @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: false}) sort: MatSort;
+
     totalStudents: number = 0;
+    expandedStudent: Student | null;
     students: Student[];
     dataSource: MatTableDataSource<Student>
-    displayedColumns: string[] = ["id", "firstName", "lastName", "age", "edit", "delete"];
+    displayedStudentColumns: string[] = ["id", "firstName", "lastName", "age", "edit", "delete"];
 
     constructor(private studentService: StudentService, public addDialog: MatDialog, public updateDialog: MatDialog) {
         this.students = [];
@@ -87,5 +99,9 @@ export class StudentComponent implements OnInit {
         this.dataSource = new MatTableDataSource<Student>(this.students);
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = (item, property) => item[property];
+    }
+
+    onRowClick(student: Student) {
+        this.expandedStudent = this.expandedStudent === student ? null : student;
     }
 }

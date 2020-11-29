@@ -1,6 +1,5 @@
 package ru.mondayish.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,11 +25,12 @@ public class StudentService implements EducationService<Student> {
     @Override
     public Student create(Student student) {
         // handle every new subject
-        student.getMarksStorages()
-                .stream()
-                .map(MarksStorage::getSubject)
-                .filter(subject -> subject.getId() == 0)
-                .forEach(subjectRepository::save);
+        Optional.ofNullable(student.getMarksStorages()).ifPresent(marksStorages -> {
+            marksStorages.stream()
+                    .map(MarksStorage::getSubject)
+                    .filter(subject -> subject.getId() == 0)
+                    .forEach(subjectRepository::save);
+        });
         return studentRepository.save(student);
     }
 

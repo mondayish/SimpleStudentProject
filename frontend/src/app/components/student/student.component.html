@@ -1,6 +1,6 @@
-<div style="width: 80%; margin: 1% auto" class="mat-elevation-z8 p-2">
+<div class="outer-layer mat-elevation-z8 p-2">
     <h1 class="text-center">Student list</h1>
-    <table mat-table [dataSource]="dataSource" style="width: 100%" class="table-striped" matSort>
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="student-table table-success" matSort>
 
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
@@ -36,8 +36,19 @@
             </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let student" [attr.colspan]="displayedStudentColumns.length">
+                <div class="student-details"
+                     [@detailExpand]="student === expandedStudent ? 'expanded' : 'collapsed'">
+                    <marks-app [student]="student"></marks-app>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedStudentColumns"></tr>
+        <tr mat-row *matRowDef="let student; columns: displayedStudentColumns;"
+            (click)="onRowClick(student)"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expanded-row"></tr>
     </table>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" [length]="totalStudents"

@@ -1,0 +1,16 @@
+.student-table{
+    width: 100%;
+}
+
+.outer-layer{
+    width: 80%;
+    margin: 1% auto;
+}
+
+.student-details{
+    overflow: hidden;
+}
+
+.expanded-row{
+    height: 0;
+}
