@@ -6,6 +6,7 @@ import {MatTable} from "@angular/material/table";
 import {StudentService} from "../../services/student.service";
 import {SubjectService} from "../../services/subject.service";
 import {Subject} from "../../models/Subject";
+import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 
 @Component({
     selector: 'marks-app',
@@ -25,12 +26,16 @@ export class MarksComponent implements OnInit {
     selectedMarksStorage: MarksStorage;
 
     // todo write more comments or documentation...
-    // todo not the best practice I think
-    // todo handle adding subject and ...
+    // todo fix save state?
+    // todo refactoring
+    // todo auto loading new subjects after adding new
 
     saveState: string;
     isNeedToAddSubject: boolean = false;
     selectedSubject: Subject;
+
+    subjectForm: FormGroup;
+    subjectToAdd: Subject = new Subject(0, '', '', null, null);
 
     constructor(private studentService: StudentService, private subjectService: SubjectService) {
     }
@@ -40,10 +45,22 @@ export class MarksComponent implements OnInit {
             this.selectedMarksStorage = this.student.marksStorages[0];
         }
         this.loadSubjects();
+
+        this.subjectForm = new FormGroup({
+            name: new FormControl('',
+                [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
+            description: new FormControl('',
+                [Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+        });
     }
 
     getBeautifulDate(date: Date | string | null): string {
         return date === null ? "" : new Date(date).toLocaleDateString('ru-RU');
+    }
+
+    fieldErrors(formControlName: string): ValidationErrors | null {
+        const fieldState = this.subjectForm.controls[formControlName];
+        return fieldState.dirty && fieldState.errors ? fieldState.errors : null;
     }
 
     onAddMarkClick(): void {
@@ -60,16 +77,24 @@ export class MarksComponent implements OnInit {
         );
     }
 
-    onAddSubjectClick(): void {
-        this.isNeedToAddSubject = true;
+    toggleIsNeedToAddSubject(){
+        this.isNeedToAddSubject = !this.isNeedToAddSubject;
+    }
+
+    onAddExistingClick(): void {
+        this.student.marksStorages.push(new MarksStorage(0, [], null, this.selectedSubject));
+        this.filterExistingSubjects();
+        this.isNeedToAddSubject = false;
+    }
+
+    onAddNewClick(): void {
+        this.student.marksStorages.push(new MarksStorage(0, [], null, this.subjectToAdd));
+        this.isNeedToAddSubject = false;
     }
 
     private filterExistingSubjects(): void {
         const studentSubjectIds: number[] = this.student.marksStorages.map(marksStorage => marksStorage.subject.id);
-        console.log(this.student.id + " : " + studentSubjectIds);
         this.existingSubjects = this.existingSubjects.filter(subject => !studentSubjectIds.includes(subject.id));
-        console.log(this.student.id + " : " + this.existingSubjects);
-
     }
 
     // because datepicker works with UTC and it makes some problems
