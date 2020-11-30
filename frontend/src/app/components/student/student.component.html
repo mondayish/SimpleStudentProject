@@ -38,9 +38,9 @@
 
         <ng-container matColumnDef="expandedDetail">
             <td mat-cell *matCellDef="let student" [attr.colspan]="displayedStudentColumns.length">
-                <div class="student-details"
+                <div class="student-details" *ngIf="allSubjects !== undefined"
                      [@detailExpand]="student === expandedStudent ? 'expanded' : 'collapsed'">
-                    <marks-app [student]="student"></marks-app>
+                    <marks-app (onAddNewSubject)="onAddNewSubject($event)"  [student]="student" [existingSubjects]="allSubjects"></marks-app>
                 </div>
             </td>
         </ng-container>

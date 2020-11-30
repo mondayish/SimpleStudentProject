@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild} from '@angular/core';
 import {Student} from "../../models/Student";
 import {Mark} from "../../models/Mark";
 import {MarksStorage} from "../../models/MarksStorage";
@@ -13,12 +13,13 @@ import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/for
     templateUrl: './marks.component.html'
 })
 
-export class MarksComponent implements OnInit {
+export class MarksComponent implements OnInit, OnChanges {
 
     @Input() student: Student;
+    @Input() existingSubjects: Subject[];
     @ViewChild(MatTable) table: MatTable<Mark>;
+    @Output() onAddNewSubject: EventEmitter<Subject> = new EventEmitter<Subject>();
 
-    existingSubjects: Subject[];
     displayedMarkColumns: string[] = ['point', 'date'];
     maxDate: Date = new Date();
     markPoints: number[] = [2, 3, 4, 5];
@@ -28,7 +29,6 @@ export class MarksComponent implements OnInit {
     // todo write more comments or documentation...
     // todo fix save state?
     // todo refactoring
-    // todo auto loading new subjects after adding new
 
     saveState: string;
     isNeedToAddSubject: boolean = false;
@@ -40,11 +40,13 @@ export class MarksComponent implements OnInit {
     constructor(private studentService: StudentService, private subjectService: SubjectService) {
     }
 
+    ngOnChanges(): void {
+        this.filterExistingSubjects();
+    }
+
     ngOnInit(): void {
-        if (this.student.marksStorages.length > 0) {
-            this.selectedMarksStorage = this.student.marksStorages[0];
-        }
-        this.loadSubjects();
+        const markStorages: MarksStorage[] = this.student.marksStorages;
+        this.selectedMarksStorage = markStorages.length > 0 ? markStorages[0] : null;
 
         this.subjectForm = new FormGroup({
             name: new FormControl('',
@@ -77,7 +79,7 @@ export class MarksComponent implements OnInit {
         );
     }
 
-    toggleIsNeedToAddSubject(){
+    toggleIsNeedToAddSubject() {
         this.isNeedToAddSubject = !this.isNeedToAddSubject;
     }
 
@@ -88,8 +90,12 @@ export class MarksComponent implements OnInit {
     }
 
     onAddNewClick(): void {
-        this.student.marksStorages.push(new MarksStorage(0, [], null, this.subjectToAdd));
-        this.isNeedToAddSubject = false;
+        this.subjectService.createSubject(this.subjectToAdd).subscribe((createdSubject: Subject) => {
+            this.onAddNewSubject.emit(createdSubject);
+            this.student.marksStorages.push(new MarksStorage(0, [], null, createdSubject));
+            this.isNeedToAddSubject = false;
+        });
+
     }
 
     private filterExistingSubjects(): void {
@@ -107,10 +113,10 @@ export class MarksComponent implements OnInit {
         return result;
     }
 
-    private loadSubjects(): void {
-        this.subjectService.getAllSubject().subscribe((data: Subject[]) => {
-            this.existingSubjects = data;
-            this.filterExistingSubjects();
-        });
-    }
+    // private loadSubjects(): void {
+    //     this.subjectService.getAllSubject().subscribe((data: Subject[]) => {
+    //         this.existingSubjects = data;
+    //         this.filterExistingSubjects();
+    //     });
+    // }
 }

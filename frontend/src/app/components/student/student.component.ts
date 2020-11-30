@@ -9,6 +9,8 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {UpdateStudentDialogComponent} from "../update-student-dialog/update-student-dialog.component";
 import {PageableParams} from "../../models/PageableParams";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {SubjectService} from "../../services/subject.service";
+import {Subject} from "../../models/Subject";
 
 @Component({
     selector: "student-app",
@@ -31,16 +33,21 @@ export class StudentComponent implements OnInit {
 
     totalStudents: number = 0;
     expandedStudent: Student | null;
+    allSubjects: Subject[];
     students: Student[];
     dataSource: MatTableDataSource<Student>
     displayedStudentColumns: string[] = ["id", "firstName", "lastName", "age", "edit", "delete"];
 
-    constructor(private studentService: StudentService, public addDialog: MatDialog, public updateDialog: MatDialog) {
+    constructor(private studentService: StudentService,
+                private subjectService: SubjectService,
+                private addDialog: MatDialog,
+                private updateDialog: MatDialog) {
         this.students = [];
     }
 
     ngOnInit(): void {
         this.loadStudents({page: 0, size: 5});
+        this.loadSubjects();
     }
 
     addStudent(): void {
@@ -82,12 +89,25 @@ export class StudentComponent implements OnInit {
         this.loadStudents({page: event.pageIndex, size: event.pageSize});
     }
 
+    onRowClick(student: Student) {
+        this.expandedStudent = this.expandedStudent === student ? null : student;
+    }
+
+    // we need to refer to another array to emit changes
+    onAddNewSubject(newSubject: Subject) {
+        this.allSubjects = this.allSubjects.concat(newSubject);
+    }
+
     private loadStudents(params: PageableParams): void {
         this.studentService.getAllStudents(params).subscribe(data => {
             this.students = data['content'];
             this.totalStudents = data['totalElements'];
             this.initializeDataSource();
         });
+    }
+
+    private loadSubjects(): void {
+        this.subjectService.getAllSubject().subscribe((data: Subject[]) => this.allSubjects = data);
     }
 
     // refresh the current page of table for accepting CRUD operations
@@ -99,9 +119,5 @@ export class StudentComponent implements OnInit {
         this.dataSource = new MatTableDataSource<Student>(this.students);
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = (item, property) => item[property];
-    }
-
-    onRowClick(student: Student) {
-        this.expandedStudent = this.expandedStudent === student ? null : student;
     }
 }
