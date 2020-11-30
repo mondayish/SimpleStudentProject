@@ -4,6 +4,8 @@ import {Mark} from "../../models/Mark";
 import {MarksStorage} from "../../models/MarksStorage";
 import {MatTable} from "@angular/material/table";
 import {StudentService} from "../../services/student.service";
+import {SubjectService} from "../../services/subject.service";
+import {Subject} from "../../models/Subject";
 
 @Component({
     selector: 'marks-app',
@@ -15,21 +17,29 @@ export class MarksComponent implements OnInit {
     @Input() student: Student;
     @ViewChild(MatTable) table: MatTable<Mark>;
 
+    existingSubjects: Subject[];
     displayedMarkColumns: string[] = ['point', 'date'];
     maxDate: Date = new Date();
     markPoints: number[] = [2, 3, 4, 5];
     markToAdd: Mark = new Mark(0, 5, new Date());
     selectedMarksStorage: MarksStorage;
-    // todo not the best practice I think
-    saveState: string;
 
-    constructor(private studentService: StudentService) {
+    // todo write more comments or documentation...
+    // todo not the best practice I think
+    // todo handle adding subject and ...
+
+    saveState: string;
+    isNeedToAddSubject: boolean = false;
+    selectedSubject: Subject;
+
+    constructor(private studentService: StudentService, private subjectService: SubjectService) {
     }
 
     ngOnInit(): void {
         if (this.student.marksStorages.length > 0) {
             this.selectedMarksStorage = this.student.marksStorages[0];
         }
+        this.loadSubjects();
     }
 
     getBeautifulDate(date: Date | string | null): string {
@@ -45,9 +55,21 @@ export class MarksComponent implements OnInit {
 
     onSaveChangesClick(): void {
         this.studentService.updateStudent(this.student).subscribe(
-            data => this.saveState="success",
-            error => this.saveState="error"
+            data => this.saveState = "success",
+            error => this.saveState = "error"
         );
+    }
+
+    onAddSubjectClick(): void {
+        this.isNeedToAddSubject = true;
+    }
+
+    private filterExistingSubjects(): void {
+        const studentSubjectIds: number[] = this.student.marksStorages.map(marksStorage => marksStorage.subject.id);
+        console.log(this.student.id + " : " + studentSubjectIds);
+        this.existingSubjects = this.existingSubjects.filter(subject => !studentSubjectIds.includes(subject.id));
+        console.log(this.student.id + " : " + this.existingSubjects);
+
     }
 
     // because datepicker works with UTC and it makes some problems
@@ -55,7 +77,15 @@ export class MarksComponent implements OnInit {
         const result: Date = new Date(date);
         const timeZoneOffset: number = date.getTimezoneOffset() / 60;
         const currentHours: number = date.getHours();
-        currentHours < 24 + timeZoneOffset ? result.setHours(currentHours - timeZoneOffset) : result.setDate(date.getDate() + 1);
+        currentHours < 24 + timeZoneOffset ? result.setHours(currentHours - timeZoneOffset)
+            : result.setDate(date.getDate() + 1);
         return result;
+    }
+
+    private loadSubjects(): void {
+        this.subjectService.getAllSubject().subscribe((data: Subject[]) => {
+            this.existingSubjects = data;
+            this.filterExistingSubjects();
+        });
     }
 }

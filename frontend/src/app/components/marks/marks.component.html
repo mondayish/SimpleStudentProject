@@ -1,7 +1,8 @@
-<div class="container text-center bg-light rounded">
+<div class="container-fluid text-center bg-light rounded">
     <div *ngIf="student.marksStorages.length>0" class="row m-3">
 
         <div class="col my-auto">
+
             <div>Select subject</div>
             <mat-form-field appearance="fill">
                 <mat-label>Subject</mat-label>
@@ -12,7 +13,20 @@
                 </mat-select>
             </mat-form-field>
             <div>
-                <button mat-raised-button class="btn-info" (click)="">Add subject</button>
+                <button mat-raised-button class="btn-info" (click)="onAddSubjectClick()">Add subject</button>
+            </div>
+
+            <div *ngIf="isNeedToAddSubject" class="m-3 p-3 border border-info rounded">
+                <div>Select from existing subjects</div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Existing subjects</mat-label>
+                    <mat-select [(value)]="selectedSubject">
+                        <mat-option [value]="subject" *ngFor="let subject of existingSubjects">
+                            {{subject.name}} - {{subject.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button class="ml-3" color="primary">Add existing</button>
             </div>
         </div>
 
@@ -61,8 +75,8 @@
 
     </div>
 
-    <div class="text-center m-2">
-        <div class="text-success m-2" *ngIf="saveState==='success'" >Changes were successfully saved</div>
+    <div class="text-center m-3 p-3">
+        <div class="text-success m-2" *ngIf="saveState==='success'">Changes were successfully saved</div>
         <div class="text-danger m-2" *ngIf="saveState==='error'">Ooops, error while save</div>
         <button mat-raised-button class="btn-success" (click)="onSaveChangesClick()">Save changes</button>
     </div>
