@@ -1,4 +1,4 @@
-import {NgModule} from "@angular/core";
+import {Injector, NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -27,6 +27,7 @@ import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MarksComponent} from './components/marks/marks.component';
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
+import {ServiceLocator} from "./services/ServiceLocator";
 
 const appRoutes: Routes = [
     {path: 'students', component: StudentComponent},
@@ -46,4 +47,7 @@ const appRoutes: Routes = [
 })
 
 export class AppModule {
+    constructor(private injector: Injector) {
+        ServiceLocator.injector = injector;
+    }
 }

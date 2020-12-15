@@ -21,8 +21,7 @@ public class Subject {
     @JsonIgnore
     private List<MarksStorage> marksStorages;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "subjects_professors")
+    @ManyToMany(mappedBy = "subjects")
     @JsonIgnore
     private List<Professor> professors;
 

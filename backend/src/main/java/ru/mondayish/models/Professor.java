@@ -18,6 +18,7 @@ public class Professor {
 
     private int age;
 
-    @ManyToMany(mappedBy = "professors")
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "subjects_professors")
     private List<Subject> subjects;
 }

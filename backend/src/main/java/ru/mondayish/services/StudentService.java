@@ -3,10 +3,8 @@ package ru.mondayish.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.mondayish.models.MarksStorage;
 import ru.mondayish.models.Student;
 import ru.mondayish.repositories.StudentRepository;
-import ru.mondayish.repositories.SubjectRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,22 +13,13 @@ import java.util.Optional;
 public class StudentService implements EducationService<Student> {
 
     private final StudentRepository studentRepository;
-    private final SubjectRepository subjectRepository;
 
-    public StudentService(StudentRepository studentRepository, SubjectRepository subjectRepository) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.subjectRepository = subjectRepository;
     }
 
     @Override
     public Student create(Student student) {
-        // handle every new subject
-        Optional.ofNullable(student.getMarksStorages()).ifPresent(marksStorages -> {
-            marksStorages.stream()
-                    .map(MarksStorage::getSubject)
-                    .filter(subject -> subject.getId() == 0)
-                    .forEach(subjectRepository::save);
-        });
         return studentRepository.save(student);
     }
 

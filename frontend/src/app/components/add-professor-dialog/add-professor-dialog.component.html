@@ -20,6 +20,16 @@
             <span *ngIf="fieldErrors('age').required">Age is required</span>
             <span *ngIf="fieldErrors('age').min || fieldErrors('age').max">Age must be in [18..100]</span>
         </div>
+
+        <p>Select subjects</p>
+        <div class="mb-2">
+            <mat-label>Subjects</mat-label>
+            <mat-select [(value)]="professor.subjects" multiple>
+                <mat-option [value]="subject" *ngFor="let subject of allSubjects">
+                    {{subject.name}} - {{subject.description}}
+                </mat-option>
+            </mat-select>
+        </div>
     </form>
 </div>
 <div mat-dialog-actions>

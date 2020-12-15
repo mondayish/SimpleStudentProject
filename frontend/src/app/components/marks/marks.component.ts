@@ -27,10 +27,9 @@ export class MarksComponent implements OnInit, OnChanges {
     selectedMarksStorage: MarksStorage;
 
     // todo write more comments or documentation...
-    // todo fix save state?
     // todo refactoring
 
-    saveState: string;
+    isSuccessfulSave: boolean;
     isNeedToAddSubject: boolean = false;
     selectedSubject: Subject;
 
@@ -74,8 +73,8 @@ export class MarksComponent implements OnInit, OnChanges {
 
     onSaveChangesClick(): void {
         this.studentService.updateStudent(this.student).subscribe(
-            data => this.saveState = "success",
-            error => this.saveState = "error"
+            data => this.isSuccessfulSave = true,
+            error => this.isSuccessfulSave = false
         );
     }
 
@@ -112,11 +111,4 @@ export class MarksComponent implements OnInit, OnChanges {
             : result.setDate(date.getDate() + 1);
         return result;
     }
-
-    // private loadSubjects(): void {
-    //     this.subjectService.getAllSubject().subscribe((data: Subject[]) => {
-    //         this.existingSubjects = data;
-    //         this.filterExistingSubjects();
-    //     });
-    // }
 }

@@ -8,6 +8,8 @@ import {ProfessorService} from "../../services/professor.service";
 import {AddProfessorDialogComponent} from "../add-professor-dialog/add-professor-dialog.component";
 import {UpdateProfessorDialogComponent} from "../update-professor-dialog/update-professor-dialog.component";
 import {PageableParams} from "../../models/PageableParams";
+import {SubjectService} from "../../services/subject.service";
+import {Subject} from "../../models/Subject";
 
 @Component({
     selector: 'professor-app',
@@ -19,9 +21,11 @@ export class ProfessorComponent implements OnInit {
     totalProfessors: number = 0;
     professors: Professor[];
     dataSource: MatTableDataSource<Professor>;
-    displayedColumns: string[] = ["id", "name", "age", "edit", "delete"];
+    displayedColumns: string[] = ["id", "name", "age", "subjects", "edit", "delete"];
 
-    constructor(private professorService: ProfessorService, public addDialog: MatDialog, public updateDialog: MatDialog) {
+    constructor(private professorService: ProfessorService,
+                private addDialog: MatDialog,
+                private updateDialog: MatDialog) {
         this.professors = [];
     }
 
@@ -46,7 +50,7 @@ export class ProfessorComponent implements OnInit {
     updateProfessor(professor: Professor): void {
         const dialogRef = this.updateDialog.open(UpdateProfessorDialogComponent, {
             width: '300px',
-            data: new Professor(professor.id, professor.name, professor.age, [])
+            data: new Professor(professor.id, professor.name, professor.age, professor.subjects)
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -66,6 +70,12 @@ export class ProfessorComponent implements OnInit {
 
     nextPage(event: PageEvent | { pageSize: number, pageIndex: number }) {
         this.loadProfessors({page: event.pageIndex, size: event.pageSize});
+    }
+
+    getSubjectsRow(subjects: Subject[]): string {
+        let result = "";
+        subjects?.forEach(subject => result+=subject.name+", ");
+        return result.length === 0 ? result : result.substr(0, result.length-2);
     }
 
     private loadProfessors(params: PageableParams): void {

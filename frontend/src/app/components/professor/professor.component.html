@@ -17,6 +17,11 @@
             <td mat-cell *matCellDef="let professor"> {{professor.age}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="subjects">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Subjects</th>
+            <td mat-cell *matCellDef="let professor"> {{getSubjectsRow(professor.subjects)}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let professor">

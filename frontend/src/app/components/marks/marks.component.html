@@ -111,8 +111,9 @@
     </div>
 
     <div class="text-center m-3 p-3">
-        <div class="text-success m-2" *ngIf="saveState==='success'">Changes were successfully saved</div>
-        <div class="text-danger m-2" *ngIf="saveState==='error'">Ooops, error while save</div>
+        <div class="text-success m-2" *ngIf="isSuccessfulSave">Changes were successfully saved</div>
+        <!-- because !undefined === true -->
+        <div class="text-danger m-2" *ngIf="isSuccessfulSave===false">Ooops, error while save</div>
         <button mat-raised-button class="btn-success" (click)="onSaveChangesClick()">Save changes</button>
     </div>
 </div>
