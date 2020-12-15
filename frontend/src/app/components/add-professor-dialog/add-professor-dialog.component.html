@@ -22,14 +22,14 @@
         </div>
 
         <p>Select subjects</p>
-        <div class="mb-2">
+        <mat-form-field>
             <mat-label>Subjects</mat-label>
-            <mat-select [(value)]="professor.subjects" multiple>
+            <mat-select [(value)]="professor.subjects" multiple formControlName="subjects">
                 <mat-option [value]="subject" *ngFor="let subject of allSubjects">
                     {{subject.name}} - {{subject.description}}
                 </mat-option>
             </mat-select>
-        </div>
+        </mat-form-field>
     </form>
 </div>
 <div mat-dialog-actions>

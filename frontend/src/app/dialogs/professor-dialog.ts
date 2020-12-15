@@ -27,7 +27,8 @@ export abstract class ProfessorDialog implements OnInit {
             name: new FormControl('',
                 [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
             age: new FormControl('',
-                [Validators.required, Validators.min(18), Validators.max(100)])
+                [Validators.required, Validators.min(18), Validators.max(100)]),
+            subjects: new FormControl(this.professor.subjects)
         });
     }
 
